@@ -1,21 +1,32 @@
 #include <SFML/Graphics.hpp>
 using namespace sf;
 
+const int STEPS_TO_WIN = 100;
+
 class Player {
   public:
-    Player(int i);
-    RectangleShape* getShape();
-    int points = 10;
+    Player(){};
+    Player(unsigned int i, int w, int h);
+    float points = 1;
+    unsigned int id;
+    void draw(RenderWindow&);
+    unsigned int clickedButton = 255; //255 ~ no button 
   private:
     RectangleShape shape;
 };
 
-Player::Player(int i){
-  shape = RectangleShape(Vector2<float>(50,50));
-  shape.setFillColor(Color(100+(i*150), 250-(150*i), 50));
+Player::Player(unsigned int i,int w,int h){
+  id = i;
+  shape = RectangleShape(Vector2<float>(w/4,h/STEPS_TO_WIN));
+  shape.setFillColor(Color(100+(id*150), 250-(150*id), 50));
 }
 
-RectangleShape* Player::getShape(){
-  //shape.setScale(10,points);
-  return &shape;
+void Player::draw(RenderWindow& window){
+  const auto s = window.getSize();
+
+  Transform transform;
+  transform.translate(id*s.x/4,s.y);
+
+  shape.setScale(1,-points);
+  window.draw(shape, transform);
 }
